@@ -30,7 +30,7 @@
 
 
 ## Interface:
-> 1. Command-Line Interface that enables users to interact via the command prompt, providing input parameters such as number of clusters, dataset and optional settings.
+> 1. Console Interface that enables users to interact via the console, providing input parameters such as number of clusters, dataset and optional settings.
 > 2. The application supports reading from .csv files and writing to .txt files.
 
 
@@ -43,7 +43,7 @@
  > - Develop functions for classes.
 
 > 3. **Console Interface:**
- > - Develop the command-line interface.
+ > - Develop the console interface.
 
 > 4. **Testing and Quality Assurance:**
  > - Conduct integration testing to ensure the console interface works as expected.
