@@ -30,7 +30,9 @@ void normalize_column(int ind, vector<point>& points)
 
 void readpoints(ifstream& in, vector<point>& points)
 {
-
+// в этой функции я создаю вектор и просле этого пробегаю по датасетуё
+// дадее я говорю что каждая строка это класс point и я запихиваю каждый поинт в новый вектор
+// функция возвращает вектор состоящий из point
   return ;
 }
 
