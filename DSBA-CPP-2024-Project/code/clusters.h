@@ -13,17 +13,16 @@ class point
   private:
     std::vector<double> coordinates;
 
-public:
+  public:
     point(std::vector<double> coord) : coordinates(coord) {}
 
-    std::vector<double> GetCoordinates() {
+    std::vector<double> GetCoordinates() const {
         return coordinates;
     }
-  
 };
 
 
-double dist(const point &a, const point &b) /// это делаю Я
+double dist(const point &a, const point &b)
 {
 // предположим что point это вектор с значениями из одной строчки датасета
 // нам нужно использовать формулу типо abs(a^2 - b^2)
