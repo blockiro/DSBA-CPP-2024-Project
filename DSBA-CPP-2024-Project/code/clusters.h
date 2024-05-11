@@ -10,6 +10,15 @@ const int CLUST_NUM = 7;
 
 class point
 {
+  private:
+    std::vector<double> coordinates;
+
+public:
+    point(std::vector<double> coord) : coordinates(coord) {}
+
+    std::vector<double> GetCoordinates() {
+        return coordinates;
+    }
   
 };
 
