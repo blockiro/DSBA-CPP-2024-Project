@@ -33,6 +33,19 @@ void readpoints(ifstream& in, vector<point>& points)
 // в этой функции я создаю вектор и просле этого пробегаю по датасетуё
 // дадее я говорю что каждая строка это класс point и я запихиваю каждый поинт в новый вектор
 // функция возвращает вектор состоящий из point
+  string line;
+  while (std::getline(in, line)) 
+  {
+    vector<double> row;
+
+    istringstream iss(line);
+    string cell;
+    while (getline(iss, cell, ',')) 
+    {
+        row.push_back(stod(cell));
+    }
+    point data (row);
+  }
   return ;
 }
 
