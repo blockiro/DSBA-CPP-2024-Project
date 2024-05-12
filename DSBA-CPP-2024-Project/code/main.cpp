@@ -45,6 +45,7 @@ void readpoints(ifstream& in, vector<point>& points)
         row.push_back(stod(cell));
     }
     point data (row);
+    points.push_back(data);
   }
   return ;
 }
