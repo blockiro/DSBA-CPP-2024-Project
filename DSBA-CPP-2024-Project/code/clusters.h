@@ -37,9 +37,29 @@ double dist(const point &a, const point &b)
     return sqrt(sum);
 }
 
-struct cluster
+struct cluster 
 {
+  protected:
+   std::vector<point> clust;
 
+  public:
+   cluster(std::vector<double> clst) : clust(clust) {}
+
+   void pointAdder(const point& pnt)
+   {
+    clust.push_back(pnt);
+   }
+
+   int howMany() const
+   {
+     return clust.size();
+   }
+
+   std::vector<point> pointGetter() const
+   {
+    return clust;
+   }
+   
 };
 
 double cost(vector<point>& points, vector<int>& m_ind, bool ischange = false)
