@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <map>
 #include <set>
+#include <random>
+#include <limits>
 
 using namespace std;
 
@@ -11,13 +13,24 @@ const int CLUST_NUM = 7;
 class point
 {
   private:
-    std::vector<double> coordinates;
+    vector<double> coordinates;
+    int cluster;
+    double minDist;
 
   public:
-    point(std::vector<double> coord) : coordinates(coord) {}
+    point(vector<double> coord) : coordinates(coord), cluster(-1), minDist(numeric_limits<double>::max()){}
 
-    std::vector<double> GetCoordinates() const {
-        return coordinates;
+    vector<double> GetCoordinates() const {
+          return coordinates;
+      }
+    
+    void SetCluster(int clust)
+    {
+      cluster = clust;
+    }
+    void SetMinDist (double ds)
+    {
+      minDist = ds;
     }
 };
 
@@ -67,10 +80,38 @@ double cost(vector<point>& points, vector<int>& m_ind, bool ischange = false)
 
 }
 
+vector<point> select_random_points(const vector<point>& points, int k) {
+    vector<point> centroids;
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dis(0, points.size() - 1);
+
+    for (int i = 0; i < k; ++i) {
+        centroids.push_back(points.at(dis(gen)));
+    }
+
+    return centroids;
+}
+
+void assign_points_to_clusters(vector<point>& points, const vector<point>& medoids) {
+    for (auto& p : points) {
+        double min_dist = numeric_limits<double>::max();;
+        int best_cluster = -1;
+        for (size_t i = 0; i < medoids.size(); ++i) {
+            double d = dist(p, medoids[i]);
+            if (d < min_dist) {
+                min_dist = d;
+                best_cluster = i;
+            }
+        }
+        p.SetCluster(best_cluster);
+        p.SetMinDist(min_dist);
+    }
+}
 
 void clusteringPAM(vector<point>& points) //это делаю Я
 {
-  // generating CLUST_NUM random medoids
+  select_random_points(points, CLUST_NUM);
 
   // counting the cost
   
