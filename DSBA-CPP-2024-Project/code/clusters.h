@@ -75,6 +75,33 @@ struct cluster
    
 };
 
+
+//a function for reading the data from csv. file (sashka)
+std::vector<point> read_data(std::string& path_to_file)  
+
+{
+  std::vector<point> data_vec;
+  std::ifstream fileInput(path_to_file);
+  std::string line;
+
+  while(std::getline(fileInput, line))
+  {
+    std::stringstream ss(line);
+    std::string m_str;
+    std::vector<double> strow;
+
+
+    while (std::getline(ss, m_str, ','))
+    {
+      double vr = std::stod(m_str);
+      strow.push_back(vr);
+
+    }
+    data_vec.push_back(strow);
+
+  }
+
+
 double cost(vector<point>& points, vector<int>& m_ind, bool ischange = false)
 {
 
