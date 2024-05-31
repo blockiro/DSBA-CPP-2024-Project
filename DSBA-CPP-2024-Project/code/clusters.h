@@ -50,6 +50,7 @@ double dist(const point &a, const point &b)
     return sqrt(sum);
 }
 
+
 struct cluster 
 {
   protected:
@@ -74,18 +75,6 @@ struct cluster
    }
    
 };
-
-//a function that calculates the total distance between all points and centroids
-double cost(vector<point>& points, vector<int>& m_ind, bool ischange = false, std::vector<int>& clusters)
-{
-  double cst = 0.0;
-  for (size_t i = 0; i < points.size(), ++i;)
-  {
-    cst +=  dist(points[i], points[m_ind[clusters[i]]]);
-  }
-
-  return cst;
-}
 
 
 //a function for reading the data from csv. file (sashka)
@@ -114,10 +103,18 @@ std::vector<point> read_data(std::string& path_to_file)
   }
 
 
-double cost(vector<point>& points, vector<int>& m_ind, bool ischange = false)
+//a function that calculates the total distance between all points and centroids
+double cost(vector<point>& points, vector<int>& m_ind, bool ischange = false, std::vector<int>& clusters)
 {
+  double cst = 0.0;
+  for (size_t i = 0; i < points.size(), ++i;)
+  {
+    cst +=  dist(points[i], points[m_ind[clusters[i]]]);
+  }
 
+  return cst;
 }
+
 
 vector<point> select_random_points(const vector<point>& points, int k) {
     vector<point> centroids;
