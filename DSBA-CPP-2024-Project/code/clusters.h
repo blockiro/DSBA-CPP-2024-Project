@@ -79,7 +79,6 @@ struct cluster
 
 //a function for reading the data from csv. file (sashka)
 std::vector<point> read_data(std::string& path_to_file)  
-
 {
   std::vector<point> data_vec;
   std::ifstream fileInput(path_to_file);
@@ -101,6 +100,7 @@ std::vector<point> read_data(std::string& path_to_file)
     data_vec.push_back(strow);
 
   }
+}
 
 
 //a function that calculates the total distance between all points and centroids
