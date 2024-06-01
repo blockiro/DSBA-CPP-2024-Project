@@ -155,6 +155,45 @@ void assign_points_to_clusters(vector<point>& points, const vector<point>& medoi
     }
 }
 
+
+std::vector<std::vector<double>> recalculating_centroids(const std::vector<point>& points, int id)
+{
+  int dimension = points[0].GetCoordinates().size(); //размерность вектора (точки)
+  int id = CLUST_NUM; //количество кластеров
+  
+  std::vector<std::vector<double>> upd_centrs(id, std::vector<double>(dimension, 0.0));
+  std::vector<int> counts(id, 0);
+
+  for (const auto& point : points)  //перебираем точки, считаем количество кластеров
+  {
+    // тут пришлось написать геттер в классе поинт шобы достать оттуда айди кластера
+    int clst_id = point.GetCluster();
+    counts[clst_id]++;
+    const std::vector<double>& coordinates = point.GetCoordinates();
+    for (int k = 0; k < dimension; ++k)
+    {
+      upd_centrs[clst_id][k] += coordinates[k];
+    }
+  }
+
+  //тут находим среднее, делим сумму координат на количество точек в каждом кластере
+  for (int i = 0; i < id; ++i)
+  {
+    if (counts[i] > 0)
+    {
+      for (int m; m < dimension; ++m)
+      {
+        upd_centrs[i][m] /= counts[i];
+      }
+    }
+  }
+  //в результате получаем новый центроид для каждого кластера шоб не втыкали
+
+
+  return upd_centrs;
+}
+
+
 void clusteringPAM(vector<point>& points) //это делаю Я
 {
   select_random_points(points, CLUST_NUM);
