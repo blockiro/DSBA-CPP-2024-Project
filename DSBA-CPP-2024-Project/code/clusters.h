@@ -37,9 +37,19 @@ class point
     {
       minDist = ds;
     }
-    int GetCluster()
+    void SetCoordinates(vector<double> crd)
+    {
+      coordinates = crd;
+    }
+    int GetCluster() const
     {
       return cluster;
+    }
+    bool operator==(const point& other) const {
+        return coordinates == other.coordinates;
+    }
+    bool operator!=(const point& other) const {
+        return !(*this == other);
     }
 };
 
@@ -113,7 +123,7 @@ std::vector<point> read_data(std::string& path_to_file)
 
 
 //a function that calculates the total distance between all points and centroids
-double cost(vector<point>& points, vector<int>& m_ind, bool ischange = false, std::vector<int>& clusters)
+double cost(vector<point>& points, vector<int>& m_ind, vector<int>& clusters)
 {
   double cst = 0.0;
   for (size_t i = 0; i < points.size(), ++i;)
@@ -156,12 +166,11 @@ void assign_points_to_clusters(vector<point>& points, const vector<point>& medoi
 }
 
 
-std::vector<std::vector<double>> recalculating_centroids(const std::vector<point>& points, int id)
+std::vector<point> recalculating_centroids(const std::vector<point>& points, int id)
 {
   int dimension = points[0].GetCoordinates().size(); //размерность вектора (точки)
   int id = CLUST_NUM; //количество кластеров
-  
-  std::vector<std::vector<double>> upd_centrs(id, std::vector<double>(dimension, 0.0));
+  std::vector<point> upd_centrs(id);
   std::vector<int> counts(id, 0);
 
   for (const auto& point : points)  //перебираем точки, считаем количество кластеров
@@ -170,10 +179,8 @@ std::vector<std::vector<double>> recalculating_centroids(const std::vector<point
     int clst_id = point.GetCluster();
     counts[clst_id]++;
     const std::vector<double>& coordinates = point.GetCoordinates();
-    for (int k = 0; k < dimension; ++k)
-    {
-      upd_centrs[clst_id][k] += coordinates[k];
-    }
+    upd_centrs[clst_id].SetCoordinates(coordinates);
+  
   }
 
   //тут находим среднее, делим сумму координат на количество точек в каждом кластере
@@ -181,10 +188,12 @@ std::vector<std::vector<double>> recalculating_centroids(const std::vector<point
   {
     if (counts[i] > 0)
     {
+      vector<double> coord_p = upd_centrs[i].GetCoordinates();
       for (int m; m < dimension; ++m)
       {
-        upd_centrs[i][m] /= counts[i];
+        coord_p[m] /= counts[i];
       }
+      upd_centrs[i].SetCoordinates(coord_p);
     }
   }
   //в результате получаем новый центроид для каждого кластера шоб не втыкали
@@ -196,12 +205,31 @@ std::vector<std::vector<double>> recalculating_centroids(const std::vector<point
 
 void clusteringPAM(vector<point>& points) //это делаю Я
 {
-  select_random_points(points, CLUST_NUM);
+  double cst;
+  vector<point> centroids(CLUST_NUM);
+  centroids = select_random_points(points, CLUST_NUM);
+  assign_points_to_clusters(points, centroids);
 
   // counting the cost
+  cst = cost(points, , );
   
   // iterating until the cost is minimum
-
+  bool checker = true;
+  std::vector<point> upd_centrs(CLUST_NUM);
+  while (checker)
+  {
+    upd_centrs = recalculating_centroids(points, CLUST_NUM);
+    assign_points_to_clusters(points, upd_centrs);
+    double cst_new = cost(points, , );
+    if (cst_new < cst)
+    {
+      checker = false;
+    }
+    else
+    {
+      cst = cst_new;
+    }
+  }
   return ;
 }
 
@@ -216,12 +244,6 @@ vector<cluster> ClusterMaker(vector<point>& points)
   }
   return clusters;
 }
-
-void interpreting(vector<point>& points) //это делаю igor
-{
-
-}
-
 //(katya)
 void write_siluettes(string outfilename, vector<point>& points, vector<cluster>& clusters)
 {
@@ -229,7 +251,7 @@ void write_siluettes(string outfilename, vector<point>& points, vector<cluster>&
     vector<double> silhouette_scores(points.size(), 0.0);
 
     for (size_t i = 0; i < points.size(); ++i) {
-        const point& current_point = points[i];
+        point& current_point = points[i];
         int current_cluster = -1;
         double a = 0.0, b = numeric_limits<double>::max();
 
