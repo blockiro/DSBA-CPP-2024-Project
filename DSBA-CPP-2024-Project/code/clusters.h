@@ -37,6 +37,10 @@ class point
     {
       minDist = ds;
     }
+    int GetCluster()
+    {
+      return cluster;
+    }
 };
 
 
@@ -129,6 +133,7 @@ vector<point> select_random_points(const vector<point>& points, int k) {
 
     for (int i = 0; i < k; ++i) {
         centroids.push_back(points.at(dis(gen)));
+        centroids[i].SetCluster(i);
     }
 
     return centroids;
@@ -162,9 +167,20 @@ void clusteringPAM(vector<point>& points) //это делаю Я
 }
 
 
-void interpreting(vector<point>& points, vector<cluster>& clusters) //это делаю Я
+
+vector<cluster> ClusterMaker(vector<point>& points)
 {
-  
+  vector<cluster> clusters(CLUST_NUM);
+  for(size_t i = 0; i < points.size(); i++)
+  {
+    clusters[points[i].GetCluster()].pointAdder(points[i]);
+  }
+  return clusters;
+}
+
+void interpreting(vector<point>& points) //это делаю igor
+{
+
 }
 
 //(katya)
