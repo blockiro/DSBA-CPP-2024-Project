@@ -116,13 +116,13 @@ void test(string input, string pointout, string clustout, string siluetteout)
 
   vector<point> points = read_data(datafile1);
   
-  write_points(pointout, points);
+  write_points(pointfile1, points);
   
   clusteringPAM(points);
   vector<cluster> clusters = ClusterMaker(points);
-  write_clusters(clustout, points);
+  write_clusters(clustersfile1, points);
   //...
-  write_siluettes(siluetteout,points, clusters);
+  write_siluettes(siluettesfile1,points, clusters);
   
   return;
 }
