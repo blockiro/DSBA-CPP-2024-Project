@@ -59,3 +59,9 @@
 - Participated in the development of the `Point` class.
 - Implemented the `GetCoordinates` function and the `write_silhouettes` function.
 - Wrote the project documentation and participated in writing the technical assignment.
+
+### Karton Alexander
+- Participated in the development of the `Point` class.
+- Implemented the `read_data` function,`cost` function, `recalculating_centroids` function and the `cluster` structure.
+- Participated in writing the technical assignment.
+
