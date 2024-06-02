@@ -239,7 +239,7 @@ void clusteringPAM(vector<point>& points) //это делаю Я
     upd_centrs = recalculating_centroids(points, CLUST_NUM);
     assign_points_to_clusters(points, upd_centrs);
     double cst_new = cost(points,upd_centrs);
-    if (cst_new < cst)
+    if (cst_new > cst)
     {
       checker = false;
     }
