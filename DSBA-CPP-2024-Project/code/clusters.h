@@ -41,6 +41,10 @@ class point
     {
       coordinates = crd;
     }
+    double GetMinDist() const
+    {
+      return minDist;
+    }
     int GetCluster() const
     {
       return cluster;
@@ -246,50 +250,4 @@ vector<cluster> ClusterMaker(vector<point>& points)
   return clusters;
 }
 //(katya)
-void write_siluettes(string outfilename, vector<point>& points, vector<cluster>& clusters)
-{
-    ofstream out(outfilename);
-    vector<double> silhouette_scores(points.size(), 0.0);
 
-    for (size_t i = 0; i < points.size(); ++i) {
-        point& current_point = points[i];
-        int current_cluster = -1;
-        double a = 0.0, b = numeric_limits<double>::max();
-
-        for (size_t j = 0; j < clusters.size(); ++j) {
-            const auto& cl = clusters[j].pointGetter();
-            if (find(cl.begin(), cl.end(), current_point) != cl.end()) {
-                current_cluster = j;
-                break;
-            }
-        }
-
-        if (current_cluster != -1) {
-            const auto& cl = clusters[current_cluster].pointGetter();
-            for (const auto& p : cl) {
-                if (p != current_point) {
-                    a += dist(current_point, p);
-                }
-            }
-            a /= (cl.size() - 1);
-        }
-
-        for (size_t j = 0; j < clusters.size(); ++j) {
-            if (j == current_cluster) continue;
-            double distance = 0.0;
-            const auto& cl = clusters[j].pointGetter();
-            for (const auto& p : cl) {
-                distance += dist(current_point, p);
-            }
-            distance /= cl.size();
-            if (distance < b) b = distance;
-        }
-
-        silhouette_scores[i] = (b - a) / max(a, b);
-    }
-
-    for (const auto& score : silhouette_scores) {
-        out << score << endl;
-    }
-    out.close();
-}
