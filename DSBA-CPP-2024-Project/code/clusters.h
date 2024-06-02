@@ -13,7 +13,7 @@
 
 using namespace std;
 
-const int CLUST_NUM = 4;
+const int CLUST_NUM = 3;
 
 class point
 {
