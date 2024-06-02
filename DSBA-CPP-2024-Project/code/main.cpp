@@ -4,20 +4,15 @@
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <algorithm>
+#include <limits>
+#include <vector>
 
 using namespace std;
 
+
 string datafile1 = "wine-clustering.csv";
 string datafile2 = "../marketing_campaign_processed.csv";
-
-string pointfile1 = "points1.txt";
-string pointfile2 = "../points2.txt";
-
-string clustersfile1 = "clusters1.txt";
-string siluettesfile1 = "siluettes1.txt";
-
-string clustersfile2 = "../clusters2.txt";
-string siluettesfile2 = "../siluettes2.txt";
 
 double EPS = 1e-6;
 
@@ -40,7 +35,7 @@ void write_points(const string &outfilename, const vector<point> &points) {
   outfile.close();
 }
 
-void write_clusters(string outfilename, vector<point> &points) {
+void write_clusters(const string &outfilename, const vector<point> &points) {
   ofstream outfile(outfilename);
   if (!outfile) {
     cerr << "Error opening file: " << outfilename << endl;
@@ -60,13 +55,13 @@ void write_clusters(string outfilename, vector<point> &points) {
   outfile.close();
 }
 
-void write_siluettes(string outfilename, vector<point> &points,
-                     vector<cluster> &clusters) {
+void write_silhouettes(const string &outfilename, const vector<point> &points,
+                       const vector<cluster> &clusters) {
   ofstream out(outfilename);
   vector<double> silhouette_scores(points.size(), 0.0);
 
   for (size_t i = 0; i < points.size(); ++i) {
-    point &current_point = points[i];
+    const point &current_point = points[i];
     int current_cluster = -1;
     double a = 0.0, b = numeric_limits<double>::max();
 
@@ -103,6 +98,7 @@ void write_siluettes(string outfilename, vector<point> &points,
 
     silhouette_scores[i] = (b - a) / max(a, b);
   }
+
   vector<double> final_score(CLUST_NUM, 0.0);
   vector<int> counter(CLUST_NUM, 0);
   for (size_t i = 0; i < points.size(); i++) {
@@ -124,23 +120,34 @@ void write_siluettes(string outfilename, vector<point> &points,
   out.close();
 }
 
-void test(string input, string pointout, string clustout, string siluetteout) {
+void test(const string &input, const string &pointout, const string &clustout, const string &siluetteout) {
+  vector<point> points = read_data(input);  
 
-  vector<point> points = read_data(datafile1);
+  write_points(pointout, points);
 
-  write_points(pointfile1, points);
-
-  clusteringPAM(points);
-  vector<cluster> clusters = ClusterMaker(points);
-  write_clusters(clustersfile1, points);
-  write_siluettes(siluettesfile1, points, clusters);
-
-  return;
+  clusteringPAM(points);  
+  vector<cluster> clusters = ClusterMaker(points);  
+  write_clusters(clustout, points);
+  write_silhouettes(siluetteout, points, clusters);
 }
 
 int main() {
-  test(datafile1, pointfile1, clustersfile1, siluettesfile1);
-  // test(datafile2, pointfile2, clustersfile2, siluettesfile2);
+  while (true) {
+    std::cout << "Here is a program that implements the K-Means clustering algorithm for a given dataset.\nPlease enter the path to your data file: ";
+    std::string path_to;
+    std::cin >> path_to;
+
+    test(path_to, path_to + "_points.txt", path_to + "_clusters.txt", path_to + "_silhouettes.txt");
+
+    std::cout << "If you want to exit, enter 'Exit'. To continue clustering, enter 'Clusterize': ";
+    std::string decision;
+    std::cin >> decision;
+
+    if (decision == "Exit") {
+      break;
+    }
+  }
 
   return 0;
 }
+
