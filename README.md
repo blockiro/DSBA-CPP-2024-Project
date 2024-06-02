@@ -45,4 +45,12 @@
 > 4. **Testing and Quality Assurance:**
  > - Conduct integration testing to ensure the console interface works as expected.
  > - Refine the user interface based on feedback.
->  - 
+
+
+## Team Contributions
+
+### Lukianov Igor
+- Participated in the development of the `Point` class and the `Cluster` structure.
+- Implemented the `dist` function and the `ClusterMaker` function.
+- Partially wrote the `clusteringPAM` function, specifically `assign_points_to_clusters` and `select_random_points`.
+- In the `main` function, implemented `write_points` and `write_clusters`.
