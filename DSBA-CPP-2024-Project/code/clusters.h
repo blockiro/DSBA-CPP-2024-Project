@@ -73,10 +73,10 @@ double dist(const point &a, const point &b)
 struct cluster 
 {
   protected:
-   std::vector<point> clust;
+    vector<point> clust;
 
   public:
-   cluster(std::vector<double> clst) : clust(clust) {}
+   cluster(vector<double> clst) : clust(clust) {}
 
    void pointAdder(const point& pnt)
    {
@@ -88,7 +88,7 @@ struct cluster
      return clust.size();
    }
 
-   std::vector<point> pointGetter() const
+   vector<point> pointGetter() const
    {
     return clust;
    }
@@ -97,28 +97,29 @@ struct cluster
 
 
 //a function for reading the data from csv. file (sashka)
-std::vector<point> read_data(std::string& path_to_file)  
+vector<point> read_data(string& path_to_file)  
 {
-  std::vector<point> data_vec;
-  std::ifstream fileInput(path_to_file);
-  std::string line;
+  vector<point> data_vec;
+  ifstream fileInput(path_to_file);
+  string line;
 
-  while(std::getline(fileInput, line))
+  while(getline(fileInput, line))
   {
-    std::stringstream ss(line);
-    std::string m_str;
-    std::vector<double> strow;
+    stringstream ss(line);
+    string m_str;
+    vector<double> strow;
 
 
-    while (std::getline(ss, m_str, ','))
+    while (getline(ss, m_str, ','))
     {
-      double vr = std::stod(m_str);
+      double vr = stod(m_str);
       strow.push_back(vr);
 
     }
     data_vec.push_back(strow);
 
   }
+  return data_vec;
 }
 
 
@@ -166,19 +167,19 @@ void assign_points_to_clusters(vector<point>& points, const vector<point>& medoi
 }
 
 
-std::vector<point> recalculating_centroids(const std::vector<point>& points, int id)
+vector<point> recalculating_centroids(const vector<point>& points, int id)
 {
   int dimension = points[0].GetCoordinates().size(); //размерность вектора (точки)
   int id = CLUST_NUM; //количество кластеров
-  std::vector<point> upd_centrs(id);
-  std::vector<int> counts(id, 0);
+  vector<point> upd_centrs(id);
+  vector<int> counts(id, 0);
 
   for (const auto& point : points)  //перебираем точки, считаем количество кластеров
   {
     // тут пришлось написать геттер в классе поинт шобы достать оттуда айди кластера
     int clst_id = point.GetCluster();
     counts[clst_id]++;
-    const std::vector<double>& coordinates = point.GetCoordinates();
+    const vector<double>& coordinates = point.GetCoordinates();
     upd_centrs[clst_id].SetCoordinates(coordinates);
   
   }
