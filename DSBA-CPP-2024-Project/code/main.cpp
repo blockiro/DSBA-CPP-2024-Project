@@ -142,6 +142,7 @@ void test(string input, string pointout, string clustout, string siluetteout)
   write_clusters(clustersfile1, points);
   write_siluettes(siluettesfile1, points, clusters);
   
+  
   return;
 }
 

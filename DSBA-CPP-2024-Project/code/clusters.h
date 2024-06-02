@@ -13,7 +13,7 @@
 
 using namespace std;
 
-const int CLUST_NUM = 7;
+const int CLUST_NUM = 4;
 
 class point
 {
@@ -211,6 +211,21 @@ vector<point> recalculating_centroids(const vector<point>& points, int id)
       }
       upd_centrs[i].SetCoordinates(coord_p);
     }
+  }
+  for(size_t i = 0; i < upd_centrs.size(); i++)
+  {
+    double ds = __DBL_MAX__;
+    vector<double> correct;
+    for(size_t j = 0; j < points.size(); j++)
+    {
+      double n = dist(upd_centrs[i], points[j]);
+      if(n < ds)
+      {
+        ds = n;
+        correct = points[j].GetCoordinates();
+      }
+    }
+    upd_centrs[i] = correct;
   }
   //в результате получаем новый центроид для каждого кластера шоб не втыкали
 
