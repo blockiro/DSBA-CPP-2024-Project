@@ -1,3 +1,4 @@
+# **DSBA C++ Data Processing and Clustering Project Documentation**
 1. Introduction
 The clustering project implements the Partitioning Around Medoids (PAM) algorithm to cluster a set of data points into a specified number of clusters. Clustering is an unsupervised machine learning technique used to group similar data points together based on their features. This program can be used for various applications such as market segmentation, pattern recognition, and image processing.
 Key Features:
