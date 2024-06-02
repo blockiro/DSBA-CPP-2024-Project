@@ -25,9 +25,6 @@
 > - **External Data Handling:**
 > Ability to read .csv files for input data and write .txt files for output.
 
-> - **Object-Oriented Features:**
-> # Place holder
-
 
 ## Interface:
 > 1. Console Interface that enables users to interact via the console, providing input parameters such as number of clusters, dataset and optional settings.
