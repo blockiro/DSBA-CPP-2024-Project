@@ -15,6 +15,7 @@ using namespace std;
 
 const int CLUST_NUM = 7;
 
+
 class point
 {
   private:
@@ -23,9 +24,9 @@ class point
     double minDist;
 
   public:
-    point(vector<double> coord) : coordinates(coord), cluster(-1), minDist(numeric_limits<double>::max()){}
+    point(const vector<double>& coord) : coordinates(coord), cluster(-1), minDist(numeric_limits<double>::max()){}
 
-    vector<double> GetCoordinates() const {
+    const vector<double>& GetCoordinates() const {
           return coordinates;
       }
     
@@ -37,7 +38,7 @@ class point
     {
       minDist = ds;
     }
-    void SetCoordinates(vector<double> crd)
+    void SetCoordinates(const vector<double>& crd)
     {
       coordinates = crd;
     }
@@ -76,11 +77,11 @@ double dist(const point &a, const point &b)
 
 struct cluster 
 {
-  protected:
+  private:
     vector<point> clust;
 
   public:
-   cluster(vector<double> clst) : clust(clust) {}
+   cluster(const vector<point>& clst) : clust(clst) {}
 
    void pointAdder(const point& pnt)
    {
@@ -92,7 +93,7 @@ struct cluster
      return clust.size();
    }
 
-   vector<point> pointGetter() const
+   const vector<point>& pointGetter() const
    {
     return clust;
    }
@@ -101,37 +102,48 @@ struct cluster
 
 
 //a function for reading the data from csv. file (sashka)
-vector<point> read_data(string& path_to_file)  
+vector<point> read_data(const string& path_to_file)  
 {
   vector<point> data_vec;
-  ifstream fileInput(path_to_file);
-  string line;
+    ifstream fileInput(path_to_file);
+    string line;
 
-  while(getline(fileInput, line))
-  {
-    stringstream ss(line);
-    string m_str;
-    vector<double> strow;
-
-
-    while (getline(ss, m_str, ','))
-    {
-      double vr = stod(m_str);
-      strow.push_back(vr);
-
+    if (!fileInput) {
+        cerr << "Error opening file: " << path_to_file << endl;
+        return data_vec;
     }
-    data_vec.push_back(strow);
 
-  }
-  return data_vec;
+    while (getline(fileInput, line)) {
+        stringstream ss(line);
+        string m_str;
+        vector<double> strow;
+
+        while (getline(ss, m_str, ',')) {
+            if (!m_str.empty()) {
+                try {
+                    double vr = stod(m_str);
+                    strow.push_back(vr);
+                } catch (const invalid_argument& e) {
+                    cerr << "Invalid number in file: " << m_str << endl;
+                } catch (const out_of_range& e) {
+                    cerr << "Number out of range in file: " << m_str << endl;
+                }
+            }
+        }
+        if (!strow.empty()) {
+            data_vec.push_back(point(strow));
+        }
+    }
+    return data_vec;
 }
+
 
 
 //a function that calculates the total distance between all points and centroids
 double cost(vector<point>& points, vector<point> centroids)
 {
   double cst = 0.0;
-  for (size_t i = 0; i < points.size(), ++i;)
+  for (size_t i = 0; i < points.size(); ++i)
   {
     cst +=  dist(points[i], centroids[points[i].GetCluster()]);
   }
@@ -174,22 +186,22 @@ void assign_points_to_clusters(vector<point>& points, const vector<point>& medoi
 vector<point> recalculating_centroids(const vector<point>& points, int id)
 {
   int dimension = points[0].GetCoordinates().size(); //размерность вектора (точки)
-  int id = CLUST_NUM; //количество кластеров
-  vector<point> upd_centrs(id);
-  vector<int> counts(id, 0);
+  int idc = CLUST_NUM; //количество кластеров
+  vector<point> upd_centrs(idc,vector<double>(dimension,0.0));
+  vector<int> counts(idc, 0);
 
-  for (const auto& point : points)  //перебираем точки, считаем количество кластеров
+  for (const auto& p : points)  //перебираем точки, считаем количество кластеров
   {
     // тут пришлось написать геттер в классе поинт шобы достать оттуда айди кластера
-    int clst_id = point.GetCluster();
+    int clst_id = p.GetCluster();
     counts[clst_id]++;
-    const vector<double>& coordinates = point.GetCoordinates();
+    const vector<double>& coordinates = p.GetCoordinates();
     upd_centrs[clst_id].SetCoordinates(coordinates);
   
   }
 
   //тут находим среднее, делим сумму координат на количество точек в каждом кластере
-  for (int i = 0; i < id; ++i)
+  for (int i = 0; i < idc; ++i)
   {
     if (counts[i] > 0)
     {
@@ -210,31 +222,30 @@ vector<point> recalculating_centroids(const vector<point>& points, int id)
 
 void clusteringPAM(vector<point>& points) //это делаю Я
 {
-  double cst;
-  vector<point> centroids(CLUST_NUM);
-  centroids = select_random_points(points, CLUST_NUM);
-  assign_points_to_clusters(points, centroids);
+  int dimension = points[0].GetCoordinates().size();
+    int idc = CLUST_NUM;
+    double cst, cst_new;
+    bool checker = false;
 
-  // counting the cost
-  cst = cost(points,centroids);
+    vector<point> centroids = select_random_points(points, CLUST_NUM);
+    assign_points_to_clusters(points, centroids);
+
+    cst = cost(points, centroids);
+
+    while (!checker) {
+        vector<point> upd_centrs = recalculating_centroids(points, CLUST_NUM);
+        assign_points_to_clusters(points, upd_centrs);
+
+        cst_new = cost(points, upd_centrs);
+
+        if (abs(cst - cst_new) < 1) {
+            checker = true;
+        } else {
+            centroids = upd_centrs;
+            cst = cst_new;
+        }
+    }
   
-  // iterating until the cost is minimum
-  bool checker = true;
-  std::vector<point> upd_centrs(CLUST_NUM);
-  while (checker)
-  {
-    upd_centrs = recalculating_centroids(points, CLUST_NUM);
-    assign_points_to_clusters(points, upd_centrs);
-    double cst_new = cost(points,upd_centrs);
-    if (cst_new < cst)
-    {
-      checker = false;
-    }
-    else
-    {
-      cst = cst_new;
-    }
-  }
   return ;
 }
 
@@ -242,7 +253,9 @@ void clusteringPAM(vector<point>& points) //это делаю Я
 
 vector<cluster> ClusterMaker(vector<point>& points)
 {
-  vector<cluster> clusters(CLUST_NUM);
+  int idc = CLUST_NUM;
+  int dimension = points[0].GetCoordinates().size();
+  vector<cluster> clusters(idc, vector<point>());
   for(size_t i = 0; i < points.size(); i++)
   {
     clusters[points[i].GetCluster()].pointAdder(points[i]);
