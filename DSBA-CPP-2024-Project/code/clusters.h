@@ -15,6 +15,7 @@ using namespace std;
 
 const int CLUST_NUM = 3;
 
+  //class that represents the point object
 class point
 {
   private:
@@ -28,23 +29,27 @@ class point
     const vector<double>& GetCoordinates() const {
           return coordinates;
       }
-    
+  //setting the cluster    
     void SetCluster(int clust)
     {
       cluster = clust;
     }
+  //setting the minimal distance 
     void SetMinDist (double ds)
     {
       minDist = ds;
     }
+  //setting the coordinates 
     void SetCoordinates(const vector<double>& crd)
     {
       coordinates = crd;
     }
+  //getting the minimal distance 
     double GetMinDist() const
     {
       return minDist;
     }
+  //getting the cluster 
     int GetCluster() const
     {
       return cluster;
@@ -73,7 +78,7 @@ double dist(const point &a, const point &b)
     return sqrt(sum);
 }
 
-
+//a structure that represents the clusters 
 struct cluster 
 {
   private:
@@ -81,12 +86,11 @@ struct cluster
 
   public:
    cluster(const vector<point>& clst) : clust(clst) {}
-
+  //adding a point 
    void pointAdder(const point& pnt)
    {
     clust.push_back(pnt);
    }
-
    int howMany() const
    {
      return clust.size();
@@ -106,7 +110,8 @@ vector<point> read_data(const string& path_to_file)
   vector<point> data_vec;
     ifstream fileInput(path_to_file);
     string line;
-
+  //checking if there are any problems with file path
+  
     if (!fileInput) {
         cerr << "Error opening file: " << path_to_file << endl;
         return data_vec;
