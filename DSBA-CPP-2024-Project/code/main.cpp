@@ -17,16 +17,21 @@ string datafile2 = "../marketing_campaign_processed.csv";
 double EPS = 1e-6;
 
 void write_points(const string &outfilename, const vector<point> &points) {
+  // Open the output file stream
   ofstream outfile(outfilename);
+  // Check if the file was successfully opened
   if (!outfile) {
     cerr << "Error opening file: " << outfilename << endl;
     return;
   }
-
+// Iterate over each point in the points vector
   for (const auto &p : points) {
+    // Iterate over each coordinate in the current point
     for (size_t i = 0; i < p.GetCoordinates().size(); ++i) {
-      if (i > 0)
+      if (i > 0){
         outfile << ",";
+      }
+        // Write the coordinate to the file
       outfile << p.GetCoordinates()[i];
     }
     outfile << endl;
@@ -41,12 +46,16 @@ void write_clusters(const string &outfilename, const vector<point> &points) {
     cerr << "Error opening file: " << outfilename << endl;
     return;
   }
-
+// Iterate over each point in the points vector
   for (const auto &p : points) {
+    // Write the cluster ID of the current point to the file
     outfile << "Cluster " << p.GetCluster() << ": ";
+    // Iterate over each coordinate in the current point
     for (size_t i = 0; i < p.GetCoordinates().size(); ++i) {
-      if (i > 0)
+      if (i > 0){
         outfile << ",";
+      }
+      // Write the coordinate to the file
       outfile << p.GetCoordinates()[i];
     }
     outfile << endl;
