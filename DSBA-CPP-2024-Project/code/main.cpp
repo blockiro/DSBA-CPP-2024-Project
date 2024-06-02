@@ -21,34 +21,7 @@ string siluettesfile2 = "../siluettes2.txt";
 
 double EPS = 1e-6;
 
-void normalize_column(int ind, vector<point>& points)
-{
 
-  return ;
-}
-
-
-void readpoints(ifstream& in, vector<point>& points)
-{
-// в этой функции я создаю вектор и просле этого пробегаю по датасетуё
-// дадее я говорю что каждая строка это класс point и я запихиваю каждый поинт в новый вектор
-// функция возвращает вектор состоящий из point
-  string line;
-  while (std::getline(in, line)) 
-  {
-    vector<double> row;
-
-    istringstream iss(line);
-    string cell;
-    while (getline(iss, cell, ',')) 
-    {
-        row.push_back(stod(cell));
-    }
-    point data (row);
-    points.push_back(data);
-  }
-  return ;
-}
 
 void write_points(string outfilename, vector<point>& points)
 {
@@ -69,14 +42,13 @@ void write_siluettes(string outfilename, vector<cluster>& clusters)
 void test(string input, string pointout, string clustout, string siluetteout)
 {
 
-  readpoints(in, points);
+  read_data(datafile1);
   //...
   write_points(pointout, points);
   
   clusteringPAM(points);
   write_clusters(clustout, points);
   //...
-  interpreting(points, clusters);
   write_siluettes(siluetteout, clusters);
   
   return;
