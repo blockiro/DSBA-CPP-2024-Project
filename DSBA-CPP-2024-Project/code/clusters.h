@@ -153,11 +153,14 @@ double cost(vector<point>& points, vector<point> centroids)
 
 vector<point> select_random_points(const vector<point>& points, int k) {
     vector<point> centroids;
+    // Random device to seed the random number generator
     random_device rd;
     mt19937 gen(rd());
+     // Uniform distribution to generate random indices within the range of points
     uniform_int_distribution<> dis(0, points.size() - 1);
 
     for (int i = 0; i < k; ++i) {
+      // Randomly select a point and add it to the centroids vector
         centroids.push_back(points.at(dis(gen)));
         centroids[i].SetCluster(i);
     }
@@ -167,15 +170,19 @@ vector<point> select_random_points(const vector<point>& points, int k) {
 
 void assign_points_to_clusters(vector<point>& points, const vector<point>& medoids) {
     for (auto& p : points) {
+      // Initialize the minimum distance to a very large value
         double min_dist = numeric_limits<double>::max();;
         int best_cluster = -1;
         for (size_t i = 0; i < medoids.size(); ++i) {
+          // Calculate the distance between the current point and the medoid
             double d = dist(p, medoids[i]);
+            // If the calculated distance is smaller than the current minimum distance
             if (d < min_dist) {
                 min_dist = d;
                 best_cluster = i;
             }
         }
+        // Assign the point to the best cluster found
         p.SetCluster(best_cluster);
         p.SetMinDist(min_dist);
     }
@@ -246,7 +253,7 @@ void clusteringPAM(vector<point>& points) //это делаю Я
   // counting the cost
   cst = cost(points,centroids);
   
-  // iterating until the cost is minimum
+  // iterating until the previous cost less than current
   bool checker = true;
   vector<point> upd_centrs(idc, vector<double>(dimension,0.0));
   while (checker)
@@ -271,10 +278,13 @@ void clusteringPAM(vector<point>& points) //это делаю Я
 vector<cluster> ClusterMaker(vector<point>& points)
 {
   int idc = CLUST_NUM;
+  // Dimension of the points (not used in the current implementation)
   int dimension = points[0].GetCoordinates().size();
+  // Initialize a vector of clusters, each containing a vector of points
   vector<cluster> clusters(idc, vector<point>());
   for(size_t i = 0; i < points.size(); i++)
   {
+    // Add the point to the corresponding cluster based on its cluster ID
     clusters[points[i].GetCluster()].pointAdder(points[i]);
   }
   return clusters;
