@@ -13,6 +13,9 @@ using namespace std;
 
 string datafile1 = "wine-clustering.csv";
 string datafile2 = "../marketing_campaign_processed.csv";
+string pointfile1 = "points1.txt"; string pointfile2 = "../points2.txt";
+string clustersfile1 = "clusters1.txt"; string siluettesfile1 = "siluettes1.txt";
+string clustersfile2 = "../clusters2.txt"; string siluettesfile2 = "../siluettes2.txt";
 
 double EPS = 1e-6;
 
@@ -146,7 +149,7 @@ int main() {
     std::string path_to;
     std::cin >> path_to;
 
-    test(path_to, path_to + "_points.txt", path_to + "_clusters.txt", path_to + "_silhouettes.txt");
+    test(datafile1, pointfile1, clustersfile1, siluettesfile1);
 
     std::cout << "If you want to exit, enter 'Exit'. To continue clustering, enter 'Clusterize': ";
     std::string decision;
