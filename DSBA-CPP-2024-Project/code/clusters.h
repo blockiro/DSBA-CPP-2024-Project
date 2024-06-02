@@ -123,12 +123,12 @@ std::vector<point> read_data(std::string& path_to_file)
 
 
 //a function that calculates the total distance between all points and centroids
-double cost(vector<point>& points, vector<int>& m_ind, vector<int>& clusters)
+double cost(vector<point>& points, vector<point> centroids)
 {
   double cst = 0.0;
   for (size_t i = 0; i < points.size(), ++i;)
   {
-    cst +=  dist(points[i], points[m_ind[clusters[i]]]);
+    cst +=  dist(points[i], centroids[points[i].GetCluster()]);
   }
 
   return cst;
@@ -211,7 +211,7 @@ void clusteringPAM(vector<point>& points) //это делаю Я
   assign_points_to_clusters(points, centroids);
 
   // counting the cost
-  cst = cost(points, , );
+  cst = cost(points,centroids);
   
   // iterating until the cost is minimum
   bool checker = true;
@@ -220,7 +220,7 @@ void clusteringPAM(vector<point>& points) //это делаю Я
   {
     upd_centrs = recalculating_centroids(points, CLUST_NUM);
     assign_points_to_clusters(points, upd_centrs);
-    double cst_new = cost(points, , );
+    double cst_new = cost(points,upd_centrs);
     if (cst_new < cst)
     {
       checker = false;
