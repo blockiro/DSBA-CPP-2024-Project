@@ -54,3 +54,8 @@
 - Implemented the `dist` function and the `ClusterMaker` function.
 - Partially wrote the `clusteringPAM` function, specifically `assign_points_to_clusters` and `select_random_points`.
 - In the `main` function, implemented `write_points` and `write_clusters`.
+
+### Lashchinina Ekaterina
+- Participated in the development of the `Point` class.
+- Implemented the `GetCoordinates` function and the `write_silhouettes` function.
+- Wrote the project documentation and participated in writing the technical assignment.
