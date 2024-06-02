@@ -15,7 +15,6 @@ using namespace std;
 
 const int CLUST_NUM = 7;
 
-
 class point
 {
   private:
@@ -223,29 +222,32 @@ vector<point> recalculating_centroids(const vector<point>& points, int id)
 void clusteringPAM(vector<point>& points) //это делаю Я
 {
   int dimension = points[0].GetCoordinates().size();
-    int idc = CLUST_NUM;
-    double cst, cst_new;
-    bool checker = false;
+  int idc = CLUST_NUM;
+  double cst;
+  vector<point> centroids(idc, vector<double>(dimension,0.0));
+  centroids = select_random_points(points, CLUST_NUM);
+  assign_points_to_clusters(points, centroids);
 
-    vector<point> centroids = select_random_points(points, CLUST_NUM);
-    assign_points_to_clusters(points, centroids);
-
-    cst = cost(points, centroids);
-
-    while (!checker) {
-        vector<point> upd_centrs = recalculating_centroids(points, CLUST_NUM);
-        assign_points_to_clusters(points, upd_centrs);
-
-        cst_new = cost(points, upd_centrs);
-
-        if (abs(cst - cst_new) < 1) {
-            checker = true;
-        } else {
-            centroids = upd_centrs;
-            cst = cst_new;
-        }
-    }
+  // counting the cost
+  cst = cost(points,centroids);
   
+  // iterating until the cost is minimum
+  bool checker = true;
+  vector<point> upd_centrs(idc, vector<double>(dimension,0.0));
+  while (checker)
+  {
+    upd_centrs = recalculating_centroids(points, CLUST_NUM);
+    assign_points_to_clusters(points, upd_centrs);
+    double cst_new = cost(points,upd_centrs);
+    if (cst_new < cst)
+    {
+      checker = false;
+    }
+    else
+    {
+      cst = cst_new;
+    }
+  }
   return ;
 }
 
